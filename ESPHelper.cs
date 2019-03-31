@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RoRCheats
 {
-    public static class GuiHelper
+    public static class ESPHelper
     {
         private static Texture2D _coloredLineTexture;
         private static Color _coloredLineColor;

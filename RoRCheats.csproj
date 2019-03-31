@@ -305,7 +305,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GuiHelper.cs" />
+    <Compile Include="ESPHelper.cs" />
     <Compile Include="CHackLoader.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
