@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Networking;
 using RoR2;
-using RoR2.UI;
-using System.IO;
-using System.Runtime.InteropServices;
-using Rewired;
-using System.Collections.ObjectModel;
 
 namespace RoRCheats
 {
     public class Main : MonoBehaviour
     {
-
         private static RoR2.CharacterMaster LocalPlayer;
         private static RoR2.Inventory LocalPlayerInv;
         private static RoR2.HealthComponent LocalHealth;
