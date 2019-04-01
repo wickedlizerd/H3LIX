@@ -1,20 +1,45 @@
 # RoRCheats
-Risk of Rain 2 Hacks and Tools
+A small collection of hacks and cheats for Risk of Rain 2. 
 
+Feel free to submit a pr, I'll merge almost anything useful.
+
+
+### Future Goals:
+```
+  [] Full Stat view and managment
+  [] Performant and Robust ESP
+  [] Item, and mob, Spawning
+  [] Play as mobs
+```
+
+
+### Building:
 Right click on the project > add > Reference... 
 
-Add the required resources found in > `\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed`
+The required resources are found in > `\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed`
+```
+1) Assembly-CSharp.dll
+2) UnityEngine.dll
+```
 
-
-use your favorite mono injector. [sharpmonoinjector](https://github.com/warbler/SharpMonoInjector) is great
-
+Use your favorite mono injector. [sharpmonoinjector](https://github.com/warbler/SharpMonoInjector) is great
+```
 Namespace: RoRCheats
-
 Class: Loader
-
 Method: Load
+```
 
-I can't get unload to be reliable, since Sharpmonoinjector seems to have issues with the new unity. usually you'd call the Unload method on the loader class to unload it.
+### Issues:
+```
+  [] Infinite stats doesn't persist through realms
+  [] Text Overlapping on menu
+  [] menu sux lol
+  [] Unload is unreliable, and breaks injector...
+```
 
-Video: https://www.youtube.com/watch?v=ragMPNvDY44&feature=youtu.be
+### Resources:
+https://github.com/0xd4d/dnSpy
+
+### Media: 
+https://www.youtube.com/watch?v=ragMPNvDY44&feature=youtu.be
 
