@@ -1,6 +1,8 @@
 # RoRCheats
 A small collection of hacks and cheats for Risk of Rain 2. 
 
+Feel free to submit a pr, I'll merge almost anything useful.
+
 
 ### Future Goals:
 ```
