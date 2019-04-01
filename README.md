@@ -1,6 +1,11 @@
 # RoRCheats
 Risk of Rain 2 Hacks and Tools
 
+Right click on the project > add > Reference... 
+
+Add the required resources found in > `\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed`
+
+
 use your favorite mono injector. [sharpmonoinjector](https://github.com/warbler/SharpMonoInjector) is great
 
 Namespace: RoRCheats
