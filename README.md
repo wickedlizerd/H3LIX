@@ -2,10 +2,10 @@
 ## Risk of Rain 2 Hacks and Tools
 
 ### Future Goals:
-[] Full Stat view and managment
-[] Performant and Robust ESP
-[] Item, and mob, Spawning
-[] Play as mobs
+  [] Full Stat view and managment
+  [] Performant and Robust ESP
+  [] Item, and mob, Spawning
+  [] Play as mobs
 
 
 
@@ -26,10 +26,10 @@ Method: Load
 ```
 
 ### Issues:
-[] Infinite stats doesn't persist through realms
-[] Text Overlapping on menu
-[] menu sux lol
-[] Unload is unreliable, and breaks injector...
+  [] Infinite stats doesn't persist through realms
+  [] Text Overlapping on menu
+  [] menu sux lol
+  [] Unload is unreliable, and breaks injector...
 
 
 ### Resources:
