@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking;
 using RoR2;
 using RoR2.UI;
 using System.IO;
@@ -18,6 +19,7 @@ namespace RoRCheats
         private static RoR2.Inventory LocalPlayerInv;
         private static RoR2.HealthComponent LocalHealth;
         private static RoR2.SkillLocator LocalSkills;
+        private static RoR2.NetworkUser LocalNetworkUser;
         private static bool _isMenuOpen = false;
         private static bool _ifDragged = false;
         private static bool _CharacterCollected = false;
@@ -144,6 +146,7 @@ namespace RoRCheats
 
         public void Update()
         {
+            CharacterRoutine();
             CheckInputs();
             StatsRoutine();
         }
@@ -153,6 +156,18 @@ namespace RoRCheats
             if (Input.GetKeyDown(KeyCode.Insert))
             {
                 _isMenuOpen = !_isMenuOpen;
+            }
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                GiveMoney();
+            }
+        }
+
+        private void CharacterRoutine()
+        {
+            if (!_CharacterCollected)
+            {
+                GetCharacter();
             }
         }
 
@@ -202,13 +217,14 @@ namespace RoRCheats
             
             GUI.Box(new Rect(rect.x + 0f, rect.y + 0f, widthSize + 10, 50f + 45 * mulY), "", BgStyle);
             GUI.Label(new Rect(rect.x + 0f, rect.y + 5f, widthSize + 10, 95f), "Spektre menu\nv 0.01", LabelStyle);
-            if (GUI.Button(BtnRect(1, false), "Get Character", BtnStyle))
-            {
-                GetCharacter();
-            }
+           
 
             if (_CharacterCollected)
             {
+                if (GUI.Button(BtnRect(1, false), "Award Lunar Coin", BtnStyle))
+                {
+                    GiveLunarCoins();
+                }
                 // we dont have a god toggle bool, because we can just ref localhealth
                 if (LocalHealth.godMode)
                 {
@@ -248,7 +264,7 @@ namespace RoRCheats
 
                 if (GUI.Button(BtnRect(5, true), "Give Money: " + moneyToGive.ToString(), BtnStyle))
                 {
-                    GiveMoney(moneyToGive);
+                    GiveMoney();
                 }
                 if (GUI.Button(new Rect(rect.x + widthSize - 80, rect.y + btnY, 40, 40), "-", OffStyle))
                 {
@@ -275,6 +291,11 @@ namespace RoRCheats
                     if (itemsToRoll >= 1)
                         itemsToRoll++;
                 }
+            }
+            else
+            {
+                GUI.Box(new Rect(rect.x, rect.y + 95f * mulY, widthSize + 10, 50f), "", BgStyle);
+                GUI.Label(new Rect(rect.x, rect.y + 95f * mulY, widthSize + 10, 50f), "<color=yellow>Note: Buttons Will Appear in Match Only</color>", LabelStyle);
             }
         }
 
@@ -440,7 +461,9 @@ namespace RoRCheats
                 LocalPlayerInv = LocalPlayer.GetComponent<Inventory>();
                 LocalHealth = LocalPlayer.GetBody().GetComponent<HealthComponent>();
                 LocalSkills = LocalPlayer.GetBody().GetComponent<SkillLocator>();
-                _CharacterCollected = true;
+                LocalNetworkUser = LocalUserManager.GetFirstLocalUser().currentNetworkUser;
+                if (LocalPlayer.alive) _CharacterCollected = true;
+                else _CharacterCollected = false;
             }
             catch (ArgumentException)
             {
@@ -449,31 +472,39 @@ namespace RoRCheats
         }
      
         // self explanatory
-        private static void GiveMoney(uint ammount)
+        private static void GiveMoney()
         {
-            LocalPlayer.GiveMoney(ammount);
+            LocalPlayer.GiveMoney(moneyToGive);
         }
 
+        private static void GiveLunarCoins()
+        {
+            LocalNetworkUser.AwardLunarCoins(1);
+        }
 
         private static void RenderInteractables()
         {
             foreach (PurchaseInteraction purchaseInteraction in PurchaseInteraction.readOnlyInstancesList)
             {
-                float distanceToObject = Vector3.Distance(Camera.main.transform.position, purchaseInteraction.transform.position);
-                var BoundingVector = new Vector3(
-                    Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).x,
-                    Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).y,
-                    Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).z);
-
-                if (BoundingVector.z > 0.01)
+                if(purchaseInteraction.available)
                 {
-                    GUI.color = Color.green;
-                    int distance = (int)distanceToObject;
-                    String itemName = purchaseInteraction.name;
-                    int cost = purchaseInteraction.cost;
-                    string boxText = $"{itemName}\n{cost}\n{distance}m";
+                    float distanceToObject = Vector3.Distance(Camera.main.transform.position, purchaseInteraction.transform.position);
+                    var BoundingVector = new Vector3(
+                        Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).x,
+                        Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).y,
+                        Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).z);
 
-                    GUI.Label(new Rect(BoundingVector.x - 50f, (float)Screen.height - BoundingVector.y, 100f, 50f), boxText);
+                    if (BoundingVector.z > 0.01)
+                    {
+                        GUI.color = Color.green;
+                        int distance = (int)distanceToObject;
+                        String itemName = purchaseInteraction.name;
+                        itemName.Replace("(Clone)", "");
+                        int cost = purchaseInteraction.cost;
+                        string boxText = $"{itemName}\n${cost}\n{distance}m";
+
+                        GUI.Label(new Rect(BoundingVector.x - 50f, (float)Screen.height - BoundingVector.y, 100f, 50f), boxText);
+                    }
                 }
             }
         }
