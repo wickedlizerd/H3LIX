@@ -26,7 +26,6 @@ namespace RoRCheats
         public static Texture2D NewTexture2D { get { return new Texture2D(1, 1); } }
         public static int itemsToRoll = 1;
         public static uint moneyToGive = 100;
-        public static uint coinsToGive = 10;
         public static int btnY, mulY;
 
         private void OnGUI()
@@ -214,45 +213,48 @@ namespace RoRCheats
 
             if (_CharacterCollected)
             {
-               
+                if (GUI.Button(BtnRect(1, false), "Award Lunar Coin", BtnStyle))
+                {
+                    GiveLunarCoins();
+                }
                 // we dont have a god toggle bool, because we can just ref localhealth
                 if (LocalHealth.godMode)
                 {
-                    if (GUI.Button(BtnRect(1, false), "God mode: ON", OnStyle))
+                    if (GUI.Button(BtnRect(2, false), "God mode: ON", OnStyle))
                     {
                         LocalHealth.godMode = false;
                     }
                 }
-                else if (GUI.Button(BtnRect(1, false), "God mode: OFF", OffStyle))
+                else if (GUI.Button(BtnRect(2, false), "God mode: OFF", OffStyle))
                 {
                     LocalHealth.godMode = true;
                 }
 
                 if (skillToggle)
                 {
-                    if (GUI.Button(BtnRect(2, false), "Infinite Skills: ON", OnStyle))
+                    if (GUI.Button(BtnRect(3, false), "Infinite Skills: ON", OnStyle))
                     {
                         skillToggle = false;
                     }
                 }
-                else if (GUI.Button(BtnRect(2, false), "Infinite Skills: OFF", OffStyle))
+                else if (GUI.Button(BtnRect(3, false), "Infinite Skills: OFF", OffStyle))
                 {
                     skillToggle = true;
                 }
 
                 if (renderInteractables)
                 {
-                    if (GUI.Button(BtnRect(3, false), "Interactables ESP: ON", OnStyle))
+                    if (GUI.Button(BtnRect(4, false), "Interactables ESP: ON", OnStyle))
                     {
                         renderInteractables = false;
                     }
                 }
-                else if (GUI.Button(BtnRect(3, false), "Interactables ESP: OFF", OffStyle))
+                else if (GUI.Button(BtnRect(4, false), "Interactables ESP: OFF", OffStyle))
                 {
                     renderInteractables = true;
                 }
 
-                if (GUI.Button(BtnRect(4, true), "Give Money: " + moneyToGive.ToString(), BtnStyle))
+                if (GUI.Button(BtnRect(5, true), "Give Money: " + moneyToGive.ToString(), BtnStyle))
                 {
                     GiveMoney();
                 }
@@ -266,20 +268,7 @@ namespace RoRCheats
                     if (moneyToGive >= 100)
                         moneyToGive += 100;
                 }
-                if (GUI.Button(BtnRect(5, true), "Give Lunar Coins: " + coinsToGive.ToString(), BtnStyle))
-                {
-                    GiveLunarCoins();
-                }
-                if (GUI.Button(new Rect(rect.x + widthSize - 80, rect.y + btnY, 40, 40), "-", OffStyle))
-                {
-                    if (coinsToGive > 10)
-                        coinsToGive -= 10;
-                }
-                if (GUI.Button(new Rect(rect.x + widthSize - 35, rect.y + btnY, 40, 40), "+", OffStyle))
-                {
-                    if (coinsToGive >= 10)
-                        coinsToGive += 10;
-                }
+
                 if (GUI.Button(BtnRect(6, true), "Roll Items: " + itemsToRoll.ToString(), BtnStyle))
                 {
                     RollItems(itemsToRoll.ToString());
@@ -482,7 +471,7 @@ namespace RoRCheats
 
         private static void GiveLunarCoins()
         {
-            LocalNetworkUser.AwardLunarCoins(coinsToGive);
+            LocalNetworkUser.AwardLunarCoins(1);
         }
 
         private static void RenderInteractables()
