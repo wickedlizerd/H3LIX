@@ -24,13 +24,17 @@ namespace RoRCheats
         public static Rect rect = new Rect(10, 10, 20, 20);
         public static Texture2D Image = null, ontexture, onpresstexture, offtexture, offpresstexture, cornertexture, backtexture, btntexture, btnpresstexture;
         public static Texture2D NewTexture2D { get { return new Texture2D(1, 1); } }
-        public static int itemsToRoll = 1;
+        public static int itemsToRoll = 10;
+        public static int allItemsQuantity = 5;
+        private static ulong xpToGive = 100;
         public static uint moneyToGive = 100;
         public static uint coinsToGive = 10;
         public static int btnY, mulY;
+        
 
         private void OnGUI()
         {
+            
             rect = GUI.Window(0, rect, new GUI.WindowFunction(SetBG), "", new GUIStyle());
             if (_isMenuOpen)
             {
@@ -280,19 +284,57 @@ namespace RoRCheats
                     if (coinsToGive >= 10)
                         coinsToGive += 10;
                 }
-                if (GUI.Button(BtnRect(6, true), "Roll Items: " + itemsToRoll.ToString(), BtnStyle))
+                if (GUI.Button(BtnRect(6, true), "Give Experience: " + xpToGive.ToString(), BtnStyle))
+                {
+                    giveXP();
+                }
+                if (GUI.Button(new Rect(rect.x + widthSize - 80, rect.y + btnY, 40, 40), "-", OffStyle))
+                {
+                    if (xpToGive > 100)
+                        xpToGive -= 100;
+                }
+                if (GUI.Button(new Rect(rect.x + widthSize - 35, rect.y + btnY, 40, 40), "+", OffStyle))
+                {
+                    if (xpToGive >= 100)
+                        xpToGive += 100;
+                }
+                if (GUI.Button(BtnRect(7, true), "Roll Items: " + itemsToRoll.ToString(), BtnStyle))
                 {
                     RollItems(itemsToRoll.ToString());
                 }
                 if (GUI.Button(new Rect(rect.x + widthSize - 80, rect.y + btnY, 40, 40), "-", OffStyle))
                 {
-                    if (itemsToRoll > 1)
-                        itemsToRoll--;
+                    if (itemsToRoll > 5)
+                        itemsToRoll -= 5;
                 }
                 if (GUI.Button(new Rect(rect.x + widthSize - 35, rect.y + btnY, 40, 40), "+", OffStyle))
                 {
-                    if (itemsToRoll >= 1)
-                        itemsToRoll++;
+                    if (itemsToRoll >= 5)
+                        itemsToRoll += 5;
+                }
+                if (GUI.Button(BtnRect(8, true), "Give All Items: " + allItemsQuantity.ToString(), BtnStyle))
+                {
+                    GiveAllItems();
+                }
+                if (GUI.Button(new Rect(rect.x + widthSize - 80, rect.y + btnY, 40, 40), "-", OffStyle))
+                {
+                    if (allItemsQuantity > 1)
+                        allItemsQuantity -= 1;
+                }
+                if (GUI.Button(new Rect(rect.x + widthSize - 35, rect.y + btnY, 40, 40), "+", OffStyle))
+                {
+                    if (allItemsQuantity >= 1)
+                        allItemsQuantity += 1;
+                }
+                if (GUI.Button(BtnRect(9, false), "Stack Inventory", BtnStyle)) 
+                {
+                    StackInventory();
+
+                }
+                if (GUI.Button(BtnRect(10, false), "Clear Inventory", BtnStyle))
+                {
+
+                    ClearInventory();
                 }
             }
             else
@@ -456,30 +498,79 @@ namespace RoRCheats
         }
 
         // try and setup our character, if we hit an error we set it to false
+        //TODO: Find a way to stop it from checking whilst in main menu/lobby menu
         private static void GetCharacter()
         {
             try
-            {
-                LocalPlayer = LocalUserManager.GetFirstLocalUser().cachedMasterController.master;
-                LocalPlayerInv = LocalPlayer.GetComponent<Inventory>();
-                LocalHealth = LocalPlayer.GetBody().GetComponent<HealthComponent>();
-                LocalSkills = LocalPlayer.GetBody().GetComponent<SkillLocator>();
-                LocalNetworkUser = LocalUserManager.GetFirstLocalUser().currentNetworkUser;
-                if (LocalPlayer.alive) _CharacterCollected = true;
-                else _CharacterCollected = false;
+            {                
+                LocalNetworkUser = null;
+                foreach (NetworkUser readOnlyInstance in NetworkUser.readOnlyInstancesList)
+                {
+                    //localplayer == you!
+                    if (readOnlyInstance.isLocalPlayer)
+                    {                      
+                        LocalNetworkUser = readOnlyInstance;
+                        LocalPlayer = LocalNetworkUser.master;
+                        LocalPlayerInv = LocalPlayer.GetComponent<Inventory>();
+                        LocalHealth = LocalPlayer.GetBody().GetComponent<HealthComponent>();
+                        LocalSkills = LocalPlayer.GetBody().GetComponent<SkillLocator>();
+                        if (LocalPlayer.alive) _CharacterCollected = true;
+                        else _CharacterCollected = false;
+                    }
+                }         
             }
-            catch (ArgumentException)
+            catch (Exception e)
             {
                 _CharacterCollected = false;
             }
         }
-     
+        //clears inventory, duh.
+        private static void ClearInventory()
+        {
+            if (LocalPlayerInv)
+            {
+                for (ItemIndex itemIndex = ItemIndex.Syringe; itemIndex < (ItemIndex)78; itemIndex++)
+                {
+                    
+                    LocalPlayerInv.ResetItem(itemIndex);
+                    
+                }
+                LocalPlayerInv.SetEquipmentIndex(EquipmentIndex.None);
+            }
+        }
+        //TODO:
+        //Seems like after giving all items and removing all items, something breaks.
+        //throws ArgumentException: Destination array was not long enough. Look into later.
+        private static void GiveAllItems()
+        {
+            if (LocalPlayerInv)
+            {
+                for (ItemIndex itemIndex = ItemIndex.Syringe; itemIndex < (ItemIndex)78; itemIndex++)
+                {
+                    //plantonhit kills you when you pick it up
+                    if (itemIndex == ItemIndex.PlantOnHit)
+                        continue;
+                    //ResetItem sets quantity to 1, RemoveItem removes the last one.
+                    LocalPlayerInv.GiveItem(itemIndex, allItemsQuantity);
+                }
+            }
+        }
+       
+        private static void StackInventory()
+        {
+            //Does the same thing as the shrine of order. Orders all your items into stacks of several random items.
+            LocalPlayerInv.ShrineRestackInventory(Run.instance.runRNG);
+        }
         // self explanatory
+        private static void giveXP()
+        {
+            LocalPlayer.GiveExperience(xpToGive);
+        }
         private static void GiveMoney()
         {
             LocalPlayer.GiveMoney(moneyToGive);
         }
-
+        //uh, duh.
         private static void GiveLunarCoins()
         {
             LocalNetworkUser.AwardLunarCoins(coinsToGive);
