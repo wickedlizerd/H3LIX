@@ -213,7 +213,7 @@ namespace RoRCheats
         {
             
             GUI.Box(new Rect(rect.x + 0f, rect.y + 0f, widthSize + 10, 50f + 45 * mulY), "", BgStyle);
-            GUI.Label(new Rect(rect.x + 0f, rect.y + 5f, widthSize + 10, 95f), "Spektre menu\nv 0.02", LabelStyle);
+            GUI.Label(new Rect(rect.x + 0f, rect.y + 5f, widthSize + 10, 95f), "Spektre menu\nv 0.03", LabelStyle);
            
 
             if (_CharacterCollected)
