@@ -29,14 +29,6 @@ Class: Loader
 Method: Load
 ```
 
-### Issues:
-```
-  [] Infinite stats doesn't persist through realms
-  [] Text Overlapping on menu
-  [] menu sux lol
-  [] Unload is unreliable, and breaks injector...
-```
-
 ### Resources:
 https://github.com/0xd4d/dnSpy
 
