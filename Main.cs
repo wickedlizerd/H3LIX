@@ -584,20 +584,15 @@ namespace RoRCheats
                 if(purchaseInteraction.available)
                 {
                     float distanceToObject = Vector3.Distance(Camera.main.transform.position, purchaseInteraction.transform.position);
-                    var BoundingVector = new Vector3(
-                        Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).x,
-                        Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).y,
-                        Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position).z);
-
+                    Vector3 Position = Camera.main.WorldToScreenPoint(purchaseInteraction.transform.position);
+                    var BoundingVector = new Vector3(Position.x, Position.y, Position.z);
                     if (BoundingVector.z > 0.01)
                     {
                         GUI.color = Color.green;
                         int distance = (int)distanceToObject;
-                        String itemName = purchaseInteraction.name;
-                        itemName.Replace("(Clone)", "");
+                        String friendlyName = purchaseInteraction.GetDisplayName();
                         int cost = purchaseInteraction.cost;
-                        string boxText = $"{itemName}\n${cost}\n{distance}m";
-
+                        string boxText = $"{friendlyName}\n${cost}\n{distance}m";
                         GUI.Label(new Rect(BoundingVector.x - 50f, (float)Screen.height - BoundingVector.y, 100f, 50f), boxText);
                     }
                 }
