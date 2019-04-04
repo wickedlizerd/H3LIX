@@ -153,6 +153,7 @@ namespace RoRCheats
             if (Input.GetKeyDown(KeyCode.Insert))
             {
                 _isMenuOpen = !_isMenuOpen;
+                GetCharacter();
             }
             if (Input.GetKeyDown(KeyCode.V))
             {
