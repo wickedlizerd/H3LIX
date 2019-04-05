@@ -231,6 +231,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Character.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="ESPHelper.cs" />
     <Compile Include="CHackLoader.cs" />
     <Compile Include="Main.cs" />

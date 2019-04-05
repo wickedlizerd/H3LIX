@@ -22,5 +22,7 @@ namespace RoRCheats
         {
             UnityEngine.Object.Destroy(gameObject);
         }
+
+
     }
 }
