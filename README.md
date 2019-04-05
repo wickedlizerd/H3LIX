@@ -6,10 +6,10 @@ Feel free to submit a pr, I'll merge almost anything useful.
 
 ### Future Goals:
 
-- [] Full Stat view and managment
-- [] Performant and Robust ESP
-- [] Item, and mob, Spawning
-- [] Play as mobs
+-[] Full Stat view and managment
+-[] Performant and Robust ESP
+-[] Item, and mob, Spawning
+-[] Play as mobs
 
 
 ### Building:
