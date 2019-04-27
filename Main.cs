@@ -579,7 +579,7 @@ namespace RoRCheats
 
         private static void RenderInteractables()
         {
-            foreach (PurchaseInteraction purchaseInteraction in PurchaseInteraction.readOnlyInstancesList)
+            foreach (PurchaseInteraction purchaseInteraction in PurchaseInteraction.FindObjectsOfType(typeof(PurchaseInteraction)))
             {
                 if(purchaseInteraction.available)
                 {
