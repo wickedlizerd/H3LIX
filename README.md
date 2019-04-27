@@ -1,5 +1,5 @@
 # H3LIX
-## A fork of Spektre Menu for Risk of Rain 2
+#### A fork of Spektre Menu for Risk of Rain 2
 
 ### Future Goals:
 
