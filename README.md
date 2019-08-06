@@ -1,4 +1,4 @@
-# Spektre Menu
+# Spektre Menu // A Fork of H3LIX Developed by BennettStaley
 A small collection of hacks and cheats for Risk of Rain 2. 
 
 Actively looking for maintainers!  
@@ -18,6 +18,10 @@ The required resources are found in > `\Steam\steamapps\common\Risk of Rain 2\Ri
 ```
 1) Assembly-CSharp.dll
 2) UnityEngine.dll
+3) UnityEngine.TextRenderingModule.dll
+4) UnityEngine.Networking.dll
+5) UnityEngine.IMGUModule.dll
+6) UnityEngine.CoreModule.dll
 ```
 
 Use your favorite mono injector. [sharpmonoinjector](https://github.com/warbler/SharpMonoInjector) is great
