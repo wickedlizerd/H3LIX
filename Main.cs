@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RoR2;
+using System.Linq;
 
 namespace RoRCheats
 {
@@ -31,10 +32,8 @@ namespace RoRCheats
         public static uint coinsToGive = 10;
         public static int btnY, mulY;
         
-
         private void OnGUI()
         {
-            
             rect = GUI.Window(0, rect, new GUI.WindowFunction(SetBG), "", new GUIStyle());
             if (_isMenuOpen)
             {
@@ -116,7 +115,7 @@ namespace RoRCheats
                 OnStyle.active.background = OnPressTexture;
                 OnStyle.onActive.background = OnPressTexture;
                 OnStyle.normal.textColor = Color.white;
-                OnStyle.onNormal.textColor = Color.white;
+                OnStyle.onNormal.textColor = Color.white; 
                 OnStyle.active.textColor = Color.white;
                 OnStyle.onActive.textColor = Color.white;
                 OnStyle.fontSize = 18;
@@ -164,9 +163,9 @@ namespace RoRCheats
         private void CharacterRoutine()
         {
             if (!_CharacterCollected)
-            {
                 GetCharacter();
-            }
+            if (!LocalPlayer.alive)
+                GetCharacter();
         }
 
         private void ESPRoutine()
@@ -515,10 +514,9 @@ namespace RoRCheats
                         LocalPlayerInv = LocalPlayer.GetComponent<Inventory>();
                         LocalHealth = LocalPlayer.GetBody().GetComponent<HealthComponent>();
                         LocalSkills = LocalPlayer.GetBody().GetComponent<SkillLocator>();
-                        if (LocalPlayer.alive) _CharacterCollected = true;
-                        else _CharacterCollected = false;
+                        _CharacterCollected = LocalPlayer.alive;
                     }
-                }         
+                }
             }
             catch (Exception e)
             {
@@ -579,7 +577,7 @@ namespace RoRCheats
 
         private static void RenderInteractables()
         {
-            foreach (PurchaseInteraction purchaseInteraction in PurchaseInteraction.FindObjectsOfType(typeof(PurchaseInteraction)))
+            foreach (var purchaseInteraction in FindObjectsOfType<PurchaseInteraction>())
             {
                 if(purchaseInteraction.available)
                 {
@@ -595,6 +593,31 @@ namespace RoRCheats
                         string boxText = $"{friendlyName}\n${cost}\n{distance}m";
                         GUI.Label(new Rect(BoundingVector.x - 50f, (float)Screen.height - BoundingVector.y, 100f, 50f), boxText);
                     }
+                }
+            }
+            foreach (TeleporterInteraction teleporterInteraction in FindObjectsOfType<TeleporterInteraction>())
+            {
+                float distanceToObject = Vector3.Distance(Camera.main.transform.position, teleporterInteraction.transform.position);
+                Vector3 Position = Camera.main.WorldToScreenPoint(teleporterInteraction.transform.position);
+                var BoundingVector = new Vector3(Position.x, Position.y, Position.z);
+                if (BoundingVector.z > 0.01)
+                {
+                    GUI.color = 
+                        teleporterInteraction.isIdle ? Color.red :
+                        teleporterInteraction.isIdleToCharging || teleporterInteraction.isCharging ? Color.yellow :
+                        teleporterInteraction.isCharged ? Color.green : Color.yellow;
+                    int distance = (int)distanceToObject;
+                    String friendlyName = "Teleporter";
+                    string status = "" + (
+                        teleporterInteraction.isIdle ? "Idle" :
+                        teleporterInteraction.isCharging ? "Charging" :
+                        teleporterInteraction.isCharged ? "Charged" :
+                        teleporterInteraction.isActiveAndEnabled ? "Idle" :
+                        teleporterInteraction.isIdleToCharging ? "Idle-Charging" :
+                        teleporterInteraction.isInFinalSequence ? "Final-Sequence" :
+                        "???");
+                    string boxText = $"{friendlyName}\n{status}\n{distance}m";
+                    GUI.Label(new Rect(BoundingVector.x - 50f, (float)Screen.height - BoundingVector.y, 100f, 50f), boxText);
                 }
             }
         }
